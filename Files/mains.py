@@ -160,9 +160,21 @@ def execute_command(driver, command):
             except Exception as e:
                 print(f"Error clicking on {element_name}: {e}")
 
+        elif "textbox" in command:
+            # Example for handling dropdowns using Select class
+            textbox_name = command.split("textbox")[1].strip()
+            q=input("Enter the css selector for the locator: ")
+            textbox = driver.find_element(By.CSS_SELECTOR, q)
+            # Select the first option (index 0) as an example
+            q=input("Type the text to enter: ")
+            textbox.send_keys(q)
+            print(f"data successfully sent to the textfield {textbox_name}")
+
         elif "search" in command:
             search_query = command.split("search")[1].strip()
-            search_box = driver.find_element(By.NAME,"q")  # Update with the correct locator
+            j=input("Enter the css selector for the search box")
+            #=input("Enter the Css Selector")
+            search_box = driver.find_element(By.CSS_SELECTOR,j)
             search_box.send_keys(search_query)
             search_box.send_keys(Keys.RETURN)
             print(f"Performed search for {search_query}")
@@ -170,7 +182,7 @@ def execute_command(driver, command):
         elif "dropdown" in command:
             # Example for handling dropdowns using Select class
             dropdown_name = command.split("dropdown")[1].strip()
-            dropdown = Select(driver.find_element(By.NAME, dropdown_name))
+            dropdown = Select(driver.find_element(By.XPATH, f"//*[contains(text(), '{dropdown_name}')]"))
             # Select the first option (index 0) as an example
             dropdown.select_by_index(0)
             print(f"Selected the first option in the dropdown {dropdown_name}")
@@ -186,12 +198,11 @@ def execute_command(driver, command):
         elif "checkbox" in command:
             # Example for handling checkboxes
             checkbox_name = command.split("checkbox")[1].strip()
-            checkbox = driver.find_element(By.ID, checkbox_name)
+            checkbox = driver.find_element(By.XPATH, f"//*[contains(text(), '{checkbox_name}')]")
             checkbox.click()
             print(f"Clicked on the checkbox {checkbox_name}")
 
         elif "select" in command:
-
                 # Example for selecting an option in a dropdown using its visible text
                 select_name = command.split("select")[1].strip()
                 select = Select(driver.find_element(By.XPATH, f"//*[contains(text(), '{select_name}')]"))
@@ -199,12 +210,12 @@ def execute_command(driver, command):
                 print(f"Selected 'Option 1' in the dropdown {select_name}")
 
         elif "radio button" in command:
-
                 # Example for handling radio buttons
                 radio_button_name = command.split("radio button")[1].strip()
                 radio_button = driver.find_element(By.XPATH, f"//*[contains(text(), '{radio_button_name}')]")
                 radio_button.click()
                 print(f"Clicked on the radio button {radio_button_name}")
+
 
         elif "drag and drop" in command:
                 # Example for handling drag-and-drop
@@ -235,13 +246,15 @@ def execute_command(driver, command):
     # Add more commands as needed
 
 def main():
+    global command
     driver = initialize_driver()
     print(f"Default URL: {default_url}")
 
     try:
         while True:
+
             print("Enter a command (or type 'exit' to quit):")
-            command = input().lower()
+            command = input()
             #command= speech_to_text().lower()
 
             if command == 'exit':
